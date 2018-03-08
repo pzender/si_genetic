@@ -4,18 +4,17 @@ using System.IO;
 namespace SI_Genetic
 {
 
-    public class GeneticAlgorithm
+    public class GeneticAlgorithm : QAPAlgorithm
     {
-        public GeneticAlgorithm(int nOfGenerations, double p_crossover, double p_mutation, int tournament_size, int population_size, string inputFileName)
+        public GeneticAlgorithm(int nOfGenerations, double p_crossover, double p_mutation, int tournament_size, int population_size, string inputFileName) : base(inputFileName)
         {
-            this.Input = new InputData(inputFileName);
             this.NOfGenerations = nOfGenerations;
             this.P_crossover = p_crossover;
             this.P_mutation = p_mutation;
             this.Tournament_size = tournament_size;
             this.Population_size = population_size;
 
-            this.sw = new StreamWriter("../../../genetic_output.csv");
+            
         }
 
         public void Initialize()
@@ -33,31 +32,39 @@ namespace SI_Genetic
         public double P_mutation { get; private set; }
         public int Tournament_size { get; private set; }
         public int Population_size { get; private set; }
-        public InputData Input { get; private set; }
+        //public InputData Input { get; private set; }
 
 
         Phenotype best;
         Generation cur_generation;
 
-        StreamWriter sw;
 
-        public Phenotype Run()
+        public override int[] Run()
         {
             Initialize();
             for (int i = 0; i < NOfGenerations; i++)
             {
                 //report results
                 string GenerationResults = $"{i}, {cur_generation.BestRating()}, {cur_generation.AverageRating()}, {cur_generation.WorstRating()}\n";
-                Console.Write(GenerationResults);
                 sw.Write(GenerationResults);
 
                 //next generation
                 cur_generation = cur_generation.NextGeneration();
-                if (cur_generation.BestPhenotype().Evaluate() < best.Evaluate())
+                if (Evaluate(cur_generation.BestPhenotype().Genotype) < Evaluate(best.Genotype))
                     best = cur_generation.BestPhenotype();
 
             }
-            return best;
+
+            sw.WriteLine();
+            for (int i = 0; i < Input.Size; i++)
+            {
+                sw.Write($"{best.Genotype[i]}, ");
+            }
+            sw.WriteLine(Evaluate(best.Genotype));
+
+            sw.Close();
+
+            return best.Genotype;
 
         }
     }

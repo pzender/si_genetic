@@ -18,11 +18,11 @@ namespace SI_Genetic
         //roulette_selection?
         public int BestRating()
         {
-            int best_rating = Population[0].Evaluate();
+            int best_rating = parameters.Evaluate(Population[0].Genotype);
             foreach (Phenotype p in Population)
             {
-                if (p.Evaluate() < best_rating)
-                    best_rating = p.Evaluate();
+                if (parameters.Evaluate(p.Genotype) < best_rating)
+                    best_rating = parameters.Evaluate(p.Genotype);
             }
             return best_rating;
         }
@@ -31,18 +31,18 @@ namespace SI_Genetic
             int sum_rating = 0;
             foreach (Phenotype p in Population)
             {
-                sum_rating += p.Evaluate();
+                sum_rating += parameters.Evaluate(p.Genotype);
             }
             return sum_rating / Population.Length;
 
         }
         public int WorstRating()
         {
-            int worst_rating = Population[0].Evaluate();
+            int worst_rating = parameters.Evaluate(Population[0].Genotype);
             foreach (Phenotype p in Population)
             {
-                if (p.Evaluate() > worst_rating)
-                    worst_rating = p.Evaluate();
+                if (parameters.Evaluate(p.Genotype) > worst_rating)
+                    worst_rating = parameters.Evaluate(p.Genotype);
             }
             return worst_rating;
 
@@ -53,7 +53,7 @@ namespace SI_Genetic
             Phenotype best = population[0];
             foreach (Phenotype p in population)
             {
-                if (p.Evaluate() < best.Evaluate())
+                if (parameters.Evaluate(p.Genotype) < parameters.Evaluate(best.Genotype))
                     best = p;
             }
             return best;
@@ -64,7 +64,7 @@ namespace SI_Genetic
             Phenotype best = Population[0];
             foreach (Phenotype p in Population)
             {
-                if (p.Evaluate() < best.Evaluate())
+                if (parameters.Evaluate(p.Genotype) < parameters.Evaluate(best.Genotype))
                     best = p;
             }
             return best;
@@ -79,7 +79,6 @@ namespace SI_Genetic
                 tournament[i] = Population[r.Next(Population.Length)];
             }
             return BestPhenotype(tournament);
-            //throw new NotImplementedException($"U R USING A PLACEHOLDER METHOD U DUMBASS! ({GetType()}.SelectionTournament)");
 
         }
 

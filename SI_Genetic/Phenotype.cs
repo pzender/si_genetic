@@ -51,19 +51,19 @@ namespace SI_Genetic
             }
             for (int i = splice_point; i < child.Genotype.Length; i++)
             {
-
-                if (child.GenotypeContains(other.Genotype[i]) == false) //ideally - if we can take the second half from the second parent - that's great, let's go for it
+                
+                if (child.Genotype.Contains(other.Genotype[i]) == false) //ideally - if we can take the second half from the second parent - that's great, let's go for it
                 {
                     child.Genotype[i] = other.Genotype[i];
                 }
-                else if (child.GenotypeContains(this.Genotype[i]) == false) //let's see if we can grab the second half from the first parent 
+                else if (child.Genotype.Contains(other.Genotype[i]) == false) //let's see if we can grab the second half from the first parent 
                 {
                     child.Genotype[i] = this.Genotype[i];
                 }
                 else
                 { //shove whatever we can
                     int[] available = Enumerable.Range(1, parameters.Input.Size)
-                        .Where(n => child.GenotypeContains(n) == false)
+                        .Where(n => child.Genotype.Contains(n) == false)
                         .OrderBy(m => r.Next())
                         .ToArray();
                     child.Genotype[i] = available[0];
@@ -73,29 +73,6 @@ namespace SI_Genetic
             return child;
         }
 
-        public int Evaluate()
-        {
-            int sum = 0;
-            for (int i = 0; i < Genotype.Length; i++)
-            {
-                for (int j = 0; j < Genotype.Length; j++)
-                {
-                    sum += (parameters.Input.Flows[i, j] * parameters.Input.Distances[Genotype[i]-1, Genotype[j]-1]);
-                }
-            }
-            return sum;
-        }
-
-        private bool GenotypeContains(int value)
-        {
-            bool res = false;
-            for (int i = 0; i < parameters.Input.Size && res == false; i++)
-            {
-                if (Genotype[i] == value)
-                    res = true;
-            }
-            return res;
-        }
-
+        
     }
 }
