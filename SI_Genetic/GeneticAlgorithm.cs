@@ -23,6 +23,7 @@ namespace SI_Genetic
             foreach (Phenotype p in cur_generation.Population)
                 p.RandomizeGenotype();
             best = cur_generation.BestPhenotype();
+            sw.WriteLine("SEP=;");
             sw.WriteLine(DateTime.Now);
             sw.WriteLine($"generations: {NOfGenerations}, p_crossover: {P_crossover}, p_mutation: {P_mutation}, t_size: {Tournament_size}, pop_size: {Population_size}");
         }
@@ -45,7 +46,7 @@ namespace SI_Genetic
             for (int i = 0; i < NOfGenerations; i++)
             {
                 //report results
-                string GenerationResults = $"{i}, {cur_generation.BestRating()}, {cur_generation.AverageRating()}, {cur_generation.WorstRating()}\n";
+                string GenerationResults = $"{i};{cur_generation.BestRating()};{cur_generation.AverageRating()};{cur_generation.WorstRating()}\n";
                 sw.Write(GenerationResults);
 
                 //next generation

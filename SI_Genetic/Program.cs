@@ -5,45 +5,62 @@ class Program
 {
     static void Main(string[] args)
     {
-        int instance = 12;
-        int TIMES_TO_RUN = 12;
-        QAPAlgorithm test;
+        QAPAlgorithm test = null;
         
-        int genetic_sum = 0;
-        for (int i = 0; i < TIMES_TO_RUN; i++)
+        string command = "";
+
+        while (command != "exit")
         {
-            test = new GeneticAlgorithm(100, 0.7, 0.01, 8, 100, $"input{instance}.txt");
-            test.Input.ReadFile();
-            genetic_sum += (test.Evaluate(test.Run()));
-            Console.WriteLine($"Genetic {i + 1}");
+            command = Console.ReadLine();
+            switch (command)
+            {
+                case "gen":
+                    Console.WriteLine("nOfGenerations: ");
+                    int nOfGenerations = Int32.Parse(Console.ReadLine());
+                    Console.WriteLine("p_crossover: ");
+                    double p_crossover = Double.Parse(Console.ReadLine());
+                    Console.WriteLine("p_mutation: ");
+                    double p_mutation = Double.Parse(Console.ReadLine());
+                    Console.WriteLine("tourn_size: ");
+                    int tourn_size = Int32.Parse(Console.ReadLine());
+                    Console.WriteLine("pop_size: ");
+                    int pop_size = Int32.Parse(Console.ReadLine());
+                    Console.WriteLine("test_case: ");
+                    int gen_test_case = Int32.Parse(Console.ReadLine());
+
+                    test = new GeneticAlgorithm(nOfGenerations, p_crossover, p_mutation, tourn_size, pop_size, $"input{gen_test_case}.txt");
+                   
+                    break;
+                case "grd":
+                    Console.WriteLine("starting_point: ");
+                    int starting_point = Int32.Parse(Console.ReadLine());
+                    Console.WriteLine("test_case: ");
+                    int grd_test_case = Int32.Parse(Console.ReadLine());
+
+                    test = new GreedyAlgorithm(starting_point, $"input{grd_test_case}.txt");
+                   
+                    break;
+                case "rnd":
+                    Console.WriteLine("best_of: ");
+                    int best_of = Int32.Parse(Console.ReadLine());
+                    Console.WriteLine("test_case: ");
+                    int rnd_test_case = Int32.Parse(Console.ReadLine());
+
+                    test = new RandomAlgorithm(best_of, $"input{rnd_test_case}.txt");
+
+                    break;
+                default:
+                    Console.WriteLine("wut");
+                    break;
+
+            }
+
+            if (test != null)
+            {
+                test.Input.ReadFile();
+                Console.WriteLine(test.Evaluate(test.Run()));
+            }
         }
-
-        Console.WriteLine($"GENETIC : {genetic_sum / TIMES_TO_RUN} points.");
-
-
-        int greedy_sum = 0;
-        for (int i = 0; i < TIMES_TO_RUN; i++)
-        {
-            test = new GreedyAlgorithm(i%instance +1, $"input{instance}.txt");
-            test.Input.ReadFile();
-            greedy_sum += (test.Evaluate(test.Run()));
-            Console.WriteLine($"Greedy {i + 1}");
-        }
-
-        Console.WriteLine($"GREEDY  : {greedy_sum / TIMES_TO_RUN} points.");
-
-
-        int random_sum = 0;
-        for (int i = 0; i < TIMES_TO_RUN; i++)
-        {
-            test = new RandomAlgorithm(1000, $"input{instance}.txt");
-            test.Input.ReadFile();
-            random_sum += (test.Evaluate(test.Run()));
-            Console.WriteLine($"Random {i + 1}");
-        }
-
-        Console.WriteLine($"RANDOM  : {random_sum / TIMES_TO_RUN} points.");
     }
-
 }
 
