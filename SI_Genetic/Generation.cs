@@ -103,8 +103,9 @@ namespace SI_Genetic
                 }
                 else
                 {
-                    child_a = parent_a;
-                    child_b = parent_b;
+                    //TU JEBŁEŚ!
+                    child_a = parent_a.Clone();
+                    child_b = parent_b.Clone();
                 }
 
                 //MUTATION

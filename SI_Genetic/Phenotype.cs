@@ -73,6 +73,12 @@ namespace SI_Genetic
             return child;
         }
 
-        
+        public Phenotype Clone()
+        {
+            return new Phenotype(parameters)
+            {
+                Genotype = this.Genotype.ToArray()
+            };
+        }
     }
 }
