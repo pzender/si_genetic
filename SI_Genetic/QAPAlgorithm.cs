@@ -8,6 +8,7 @@ namespace SI_Genetic
         public QAPAlgorithm(string filename)
         {
             this.Input = new InputData(filename);
+            Input.ReadFile();
             string output_file = $"../../../output_files/output-{this.GetType().Name}-{DateInProperFormat()}";
             while (File.Exists(output_file + ".csv"))
             {

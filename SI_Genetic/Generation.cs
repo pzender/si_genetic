@@ -1,8 +1,9 @@
 ﻿using System;
+
 namespace SI_Genetic
 {
 
-    public class Generation
+    public abstract class Generation
     {
         public Generation(GeneticAlgorithm parameters)
         {
@@ -12,10 +13,12 @@ namespace SI_Genetic
             {
                 Population[i] = new Phenotype(parameters);
             }
+            
         }
-        GeneticAlgorithm parameters;
+        protected GeneticAlgorithm parameters;
         public Phenotype[] Population { get; private set; }
-        //roulette_selection?
+
+
         public int BestRating()
         {
             int best_rating = parameters.Evaluate(Population[0].Genotype);
@@ -48,7 +51,7 @@ namespace SI_Genetic
 
         }
 
-        Phenotype BestPhenotype(Phenotype[] population)
+        protected Phenotype BestPhenotype(Phenotype[] population)
         {
             Phenotype best = population[0];
             foreach (Phenotype p in population)
@@ -70,28 +73,33 @@ namespace SI_Genetic
             return best;
         }
 
-        Phenotype SelectionTournament(int t_size)
-        {
-            Phenotype[] tournament = new Phenotype[t_size];
-            for (int i = 0; i < t_size; i++)
-            {
-                Random r = new Random();
-                tournament[i] = Population[r.Next(Population.Length)];
-            }
-            return BestPhenotype(tournament);
+        protected abstract Phenotype Selection();
 
-        }
 
         public Generation NextGeneration()
         {
-            Generation nextGeneration = new Generation(parameters);
+            Generation nextGeneration;
+            //brzydkie to to cokolwiek
+            if(this is GenerationTournament)
+            {
+                nextGeneration = new GenerationTournament(this.parameters);
+            }
+            else if(this is GenerationRoulette)
+            {
+                nextGeneration = new GenerationRoulette(this.parameters);
+            }
+            else
+            {
+                nextGeneration = null;
+                throw new Exception("unknown generation type");
+            }
             for (int i = 0; i < Population.Length; i += 2) //using 2 phenotypes from current generation we create 2 for the next one
             {
                 Random r = new Random();
 
                 //SELECTION
-                Phenotype parent_a = SelectionTournament(parameters.Tournament_size);
-                Phenotype parent_b = SelectionTournament(parameters.Tournament_size);
+                Phenotype parent_a = Selection();
+                Phenotype parent_b = Selection();
                 Phenotype child_a;
                 Phenotype child_b;
 
@@ -103,7 +111,7 @@ namespace SI_Genetic
                 }
                 else
                 {
-                    //TU JEBŁEŚ!
+                    //TU ZEPSUŁEŚ!
                     child_a = parent_a.Clone();
                     child_b = parent_b.Clone();
                 }
